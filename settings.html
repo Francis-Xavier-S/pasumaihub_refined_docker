@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PasumaiHub - Settings</title>
+
+<script src="auth.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #dce7df;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 100%;
+    max-width: 390px;
+    height: 100vh;
+    background: #f9f9f9;
+    overflow-y: auto;
+    border-radius: 25px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.15);
+}
+
+header {
+    background: #4CAF50;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container {
+    padding: 15px;
+    padding-bottom: 110px;
+}
+
+.highlight {
+    background: #fff3cd;
+    padding: 8px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.setting-box {
+    background: white;
+    padding: 12px;
+    border-radius: 15px;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+    border-radius: 15px;
+    border: none;
+    background: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+.toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Dark mode */
+.dark-mode {
+    background: #222 !important;
+    color: white !important;
+}
+
+.dark-mode .app {
+    background: #333;
+}
+
+.dark-mode .setting-box {
+    background: #444;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 390px;
+    background: #4CAF50;
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    color: white;
+    font-size: 20px;
+}
+</style>
+</head>
+
+<body onload="initSettings()">
+
+<div class="app">
+
+<header>
+<h2>⚙️ Settings</h2>
+<div onclick="logout()" style="cursor:pointer;">🚪</div>
+</header>
+
+<div class="container">
+
+<div id="welcomeUser"></div>
+
+<!-- Change Password -->
+<div class="setting-box">
+<b>Change Password</b>
+<input type="password" id="newPassword" placeholder="New Password">
+<button onclick="changePassword()">Update Password</button>
+</div>
+
+<!-- Dark Mode -->
+<div class="setting-box toggle">
+<span>🌙 Dark Mode</span>
+<input type="checkbox" id="darkToggle" onchange="toggleDarkMode()">
+</div>
+
+<!-- Notifications -->
+<div class="setting-box toggle">
+<span>🔔 Notifications</span>
+<input type="checkbox" id="notifToggle" onchange="toggleNotifications()">
+</div>
+
+<button onclick="logout()">🚪 Logout</button>
+
+</div>
+
+<div class="bottom-nav">
+<span onclick="window.location.href='dashboard.html'">🏠</span>
+<span onclick="window.location.href='farmer.html'">🚜</span>
+<span onclick="window.location.href='buyer.html'">🛒</span>
+<span onclick="window.location.href='trends.html'">📊</span>
+<span onclick="window.location.href='transactions.html'">💳</span>
+</div>
+
+</div>
+
+<script>
+function initSettings() {
+    protectPage();
+
+    let user = getSession();
+    document.getElementById("welcomeUser").innerHTML =
+        `<div class="highlight">Logged in as: <b>${user}</b></div>`;
+
+    // Load dark mode
+    if(localStorage.getItem("darkMode") === "true") {
+        document.body.classList.add("dark-mode");
+        document.getElementById("darkToggle").checked = true;
+    }
+
+    // Load notifications
+    if(localStorage.getItem(user + "_notifications") === "true") {
+        document.getElementById("notifToggle").checked = true;
+    }
+}
+
+function changePassword() {
+    let user = getSession();
+    let newPass = document.getElementById("newPassword").value;
+
+    if(!newPass) {
+        alert("Enter new password");
+        return;
+    }
+
+    localStorage.setItem(user, newPass);
+    alert("Password Updated Successfully ✅");
+}
+
+function toggleDarkMode() {
+    let isDark = document.getElementById("darkToggle").checked;
+    localStorage.setItem("darkMode", isDark);
+    location.reload();
+}
+
+function toggleNotifications() {
+    let user = getSession();
+    let isOn = document.getElementById("notifToggle").checked;
+    localStorage.setItem(user + "_notifications", isOn);
+}
+</script>
+
+</body>
+</html>

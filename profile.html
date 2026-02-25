@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PasumaiHub - Profile</title>
+
+<!-- Auth System -->
+<script src="auth.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #dce7df;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 100%;
+    max-width: 390px;
+    height: 100vh;
+    background: #f9f9f9;
+    overflow-y: auto;
+    border-radius: 25px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.15);
+}
+
+header {
+    background: #4CAF50;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.container {
+    padding: 20px;
+    padding-bottom: 110px;
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #4CAF50;
+    margin: auto;
+    margin-bottom: 15px;
+}
+
+.highlight {
+    background: #fff3cd;
+    padding: 8px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    background: #4CAF50;
+    color: white;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 390px;
+    background: #4CAF50;
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    color: white;
+    font-size: 20px;
+}
+</style>
+</head>
+
+<body onload="initProfilePage()">
+
+<div class="app">
+
+<header>
+<h2>👤 My Profile</h2>
+<div onclick="logout()" style="cursor:pointer;">🚪</div>
+</header>
+
+<div class="container">
+
+<div id="welcomeUser"></div>
+
+<div class="profile-pic"></div>
+
+<input type="text" id="name" placeholder="Full Name">
+<input type="text" id="role" placeholder="Role (Farmer/Buyer)">
+<input type="text" id="location" placeholder="Location">
+<input type="text" id="phone" placeholder="Phone Number">
+
+<button onclick="saveProfile()">Save Profile</button>
+
+</div>
+
+<div class="bottom-nav">
+<span onclick="window.location.href='dashboard.html'">🏠</span>
+<span onclick="window.location.href='farmer.html'">🚜</span>
+<span onclick="window.location.href='buyer.html'">🛒</span>
+<span onclick="window.location.href='trends.html'">📊</span>
+<span onclick="window.location.href='transactions.html'">💳</span>
+</div>
+
+</div>
+
+<script>
+function initProfilePage() {
+    protectPage(); // Must login
+
+    let username = getSession();
+    document.getElementById("welcomeUser").innerHTML =
+        `<div class="highlight">Logged in as: <b>${username}</b></div>`;
+
+    // Load saved profile data
+    document.getElementById("name").value =
+        localStorage.getItem(username + "_name") || username;
+
+    document.getElementById("role").value =
+        localStorage.getItem(username + "_role") || "";
+
+    document.getElementById("location").value =
+        localStorage.getItem(username + "_location") || "";
+
+    document.getElementById("phone").value =
+        localStorage.getItem(username + "_phone") || "";
+}
+
+function saveProfile() {
+    let username = getSession();
+
+    localStorage.setItem(username + "_name",
+        document.getElementById("name").value);
+
+    localStorage.setItem(username + "_role",
+        document.getElementById("role").value);
+
+    localStorage.setItem(username + "_location",
+        document.getElementById("location").value);
+
+    localStorage.setItem(username + "_phone",
+        document.getElementById("phone").value);
+
+    alert("Profile Updated Successfully ✅");
+}
+</script>
+
+</body>
+</html>

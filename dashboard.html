@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PasumaiHub Dashboard</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Segoe UI;
+background:#dfe7e2;
+display:flex;
+justify-content:center;
+}
+
+/* MOBILE FRAME */
+
+.app{
+width:390px;
+height:100vh;
+background:white;
+overflow-y:auto;
+border-radius:20px;
+box-shadow:0 0 25px rgba(0,0,0,0.15);
+}
+
+/* HEADER */
+
+header{
+background:#4CAF50;
+color:white;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+header h2{
+margin:0;
+font-size:20px;
+}
+
+.header-icons a{
+color:white;
+text-decoration:none;
+font-size:20px;
+margin-left:12px;
+}
+
+/* CONTENT */
+
+.container{
+padding:15px;
+padding-bottom:90px;
+}
+
+/* CARD */
+
+.card{
+background:white;
+border-radius:15px;
+padding:15px;
+margin-bottom:15px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* MARKET CROPS */
+
+.crop-images{
+display:flex;
+justify-content:space-between;
+}
+
+.crop{
+text-align:center;
+}
+
+.crop img{
+width:90px;
+height:90px;
+border-radius:12px;
+object-fit:cover;
+}
+
+.crop p{
+font-size:13px;
+margin-top:6px;
+}
+
+/* TREND */
+
+.trend-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:12px;
+}
+
+.trend-left{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.trend-left img{
+width:55px;
+height:55px;
+border-radius:50%;
+object-fit:cover;
+}
+
+button{
+background:#4CAF50;
+border:none;
+padding:8px 16px;
+border-radius:20px;
+color:white;
+cursor:pointer;
+}
+
+/* NOTIFICATION */
+
+.notification p{
+font-size:14px;
+margin:6px 0;
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav{
+position:fixed;
+bottom:0;
+width:390px;
+background:#4CAF50;
+display:flex;
+justify-content:space-around;
+padding:12px 0;
+}
+
+.bottom-nav a{
+color:white;
+font-size:22px;
+text-decoration:none;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+<header>
+
+<h2>🌱 PasumaiHub</h2>
+
+<div class="header-icons">
+
+<a href="settings.html">⚙</a>
+
+<a href="#">🔔</a>
+
+<a href="profile.html">👤</a>
+
+</div>
+
+</header>
+
+
+<div class="container">
+
+<!-- MARKET PRICES -->
+
+<div class="card">
+
+<h3>Market Prices</h3>
+
+<div class="crop-images">
+
+<div class="crop">
+<img src="images/tomato.jpeg">
+<p>Tomato<br>₹20/kg</p>
+</div>
+
+<div class="crop">
+<img src="images/onion.jpeg">
+<p>Onion<br>₹40/kg</p>
+</div>
+
+<div class="crop">
+<img src="images/drumstick.jpeg">
+<p>Drumstick<br>₹120/kg</p>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- TRENDING CROPS -->
+
+<div class="card">
+
+<h3>Trending Crops</h3>
+
+<div class="trend-item">
+
+<div class="trend-left">
+<img src="images/ginger.jpeg">
+<span>Ginger</span>
+</div>
+
+<a href="farmer.html">
+<button>List Crop</button>
+</a>
+
+</div>
+
+
+<div class="trend-item">
+
+<div class="trend-left">
+<img src="images/brinjal.jpeg">
+<span>Brinjal</span>
+</div>
+
+<a href="farmer.html">
+<button>List Crop</button>
+</a>
+
+</div>
+
+
+<div class="trend-item">
+
+<div class="trend-left">
+<img src="images/carrot.jpeg">
+<span>Carrot</span>
+</div>
+
+<a href="farmer.html">
+<button>List Crop</button>
+</a>
+
+</div>
+
+</div>
+
+
+<!-- NOTIFICATIONS -->
+
+<div class="card notification">
+
+<h3>Notifications</h3>
+
+<p>📢 New crop recommendations available.</p>
+
+<p>📊 Market prices updated today.</p>
+
+<p>🌾 Don't forget to list seasonal crops.</p>
+
+</div>
+
+</div>
+
+
+<!-- BOTTOM NAV -->
+
+<div class="bottom-nav">
+
+<a href="dashboard.html">🏠</a>
+
+<a href="farmer.html">🚜</a>
+
+<a href="buyer.html">🛒</a>
+
+<a href="market.html">📊</a>
+
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PasumaiHub - Farmer</title>
+
+<!-- Login Protection -->
+<script src="auth.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #dce7df;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 100%;
+    max-width: 390px;
+    height: 100vh;
+    background: #f2f2f2;
+    overflow-y: auto;
+    border-radius: 25px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.15);
+}
+
+header {
+    background: #4CAF50;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.container {
+    padding: 15px;
+    padding-bottom: 110px;
+}
+
+.highlight {
+    background: #fff3cd;
+    padding: 10px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+/* Crop Cards */
+.crop-card {
+    background: #e6dfcf;
+    border-radius: 20px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.crop-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.crop-left img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Sales Box */
+.sales-box {
+    background: white;
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+button {
+    background: #4CAF50;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 15px;
+    color: white;
+    cursor: pointer;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 390px;
+    background: #4CAF50;
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    color: white;
+    font-size: 20px;
+}
+</style>
+</head>
+
+<body onload="initFarmerPage()">
+
+<div class="app">
+
+<header>
+    <h2>🚜 Farmer Dashboard</h2>
+    <div onclick="logout()" style="cursor:pointer;">🚪</div>
+</header>
+
+<div class="container">
+
+<div id="welcomeUser"></div>
+<div id="selectedCropArea"></div>
+
+<h3>My Crops</h3>
+
+<div class="crop-card">
+<div class="crop-left">
+<img src="images/tomato.jpeg">
+Tomatoes
+</div>
+₹20/kg
+</div>
+
+<div class="crop-card">
+<div class="crop-left">
+<img src="images/onion.jpeg">
+Onions
+</div>
+₹40/kg
+</div>
+
+<div class="crop-card">
+<div class="crop-left">
+<img src="images/Drumstick.jpeg">
+Drumstick
+</div>
+₹120/kg
+</div>
+
+<h3>Recent Sales</h3>
+
+<div class="sales-box">
+📊 Monthly Sales: ₹45,000<br>
+📦 Orders: 32<br>
+📈 Growth: +12%
+</div>
+
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+<span onclick="window.location.href='dashboard.html'">🏠</span>
+<span onclick="window.location.href='farmer.html'">🚜</span>
+<span onclick="window.location.href='buyer.html'">🛒</span>
+<span onclick="window.location.href='trends.html'">📊</span>
+<span onclick="window.location.href='transactions.html'">💳</span>
+</div>
+
+</div>
+
+<script>
+function initFarmerPage() {
+    protectPage(); // Require login
+
+    // Show logged in user
+    let user = getSession();
+    document.getElementById("welcomeUser").innerHTML =
+        `<div class="highlight">Welcome, <b>${user}</b></div>`;
+
+    // Show selected crop from dashboard
+    const params = new URLSearchParams(window.location.search);
+    const crop = params.get("crop");
+
+    if (crop) {
+        document.getElementById("selectedCropArea").innerHTML =
+        `<div class="highlight">Selected Crop to List: <b>${crop}</b></div>`;
+    }
+}
+</script>
+
+</body>
+</html>

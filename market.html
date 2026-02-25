@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PasumaiHub - Transactions</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #dce7df;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 100%;
+    max-width: 390px;
+    height: 100vh;
+    background: #f9f9f9;
+    overflow-y: auto;
+    border-radius: 25px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.15);
+}
+
+header {
+    background: #4CAF50;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+.container {
+    padding: 15px;
+    padding-bottom: 110px;
+}
+
+/* Score Box */
+.score-box {
+    background: white;
+    padding: 15px;
+    border-radius: 18px;
+    text-align: center;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.score-box h3 {
+    margin: 0;
+}
+
+.score-value {
+    font-size: 24px;
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+/* Transaction Cards */
+.transaction-card {
+    background: white;
+    border-radius: 15px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    font-size: 14px;
+}
+
+.paid {
+    color: green;
+    font-weight: bold;
+}
+
+.pending {
+    color: orange;
+    font-weight: bold;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 390px;
+    background: #4CAF50;
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    color: white;
+    font-size: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+<h2>💳 Transactions & Transparency</h2>
+</header>
+
+<div class="container">
+
+<!-- Transparency Score -->
+<div class="score-box">
+<h3>Transparency Score</h3>
+<div class="score-value">92%</div>
+<p>Based on fair pricing & successful transactions</p>
+</div>
+
+<!-- Farmer Rating -->
+<div class="score-box">
+<h3>Farmer Rating</h3>
+<div class="score-value">⭐ 4.6 / 5</div>
+<p>Trusted by 120+ buyers</p>
+</div>
+
+<h3>Recent Transactions</h3>
+
+<div class="transaction-card">
+Crop: Tomatoes<br>
+Quantity: 200 kg<br>
+Amount: ₹4,000<br>
+Status: <span class="paid">Paid</span>
+</div>
+
+<div class="transaction-card">
+Crop: Onions<br>
+Quantity: 150 kg<br>
+Amount: ₹6,000<br>
+Status: <span class="pending">Pending</span>
+</div>
+
+<div class="transaction-card">
+Crop: Ginger<br>
+Quantity: 80 kg<br>
+Amount: ₹7,200<br>
+Status: <span class="paid">Paid</span>
+</div>
+
+</div>
+
+<div class="bottom-nav">
+<span onclick="window.location.href='dashboard.html'">🏠</span>
+<span onclick="window.location.href='farmer.html'">🚜</span>
+<span onclick="window.location.href='buyer.html'">🛒</span>
+<span onclick="window.location.href='trends.html'">📊</span>
+<span onclick="window.location.href='transactions.html'">💳</span>
+</div>
+
+</div>
+
+</body>
+</html>

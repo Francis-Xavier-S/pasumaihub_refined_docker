@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PasumaiHub - Buyer</title>
+
+<!-- Login Protection -->
+<script src="auth.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #dce7df;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 100%;
+    max-width: 390px;
+    height: 100vh;
+    background: #f7f7f7;
+    overflow-y: auto;
+    border-radius: 25px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.15);
+}
+
+header {
+    background: #4CAF50;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.container {
+    padding: 15px;
+    padding-bottom: 110px;
+}
+
+.highlight {
+    background: #fff3cd;
+    padding: 8px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+}
+
+/* Crop Card */
+.crop-card {
+    background: white;
+    border-radius: 18px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.crop-top {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 8px;
+}
+
+.crop-top img {
+    width: 70px;
+    height: 70px;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+.price-info {
+    font-size: 14px;
+}
+
+.fair {
+    color: green;
+    font-weight: bold;
+}
+
+.high {
+    color: red;
+    font-weight: bold;
+}
+
+button {
+    width: 100%;
+    padding: 8px;
+    border-radius: 15px;
+    border: none;
+    background: #4CAF50;
+    color: white;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 390px;
+    background: #4CAF50;
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    color: white;
+    font-size: 20px;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 80%;
+    text-align: center;
+}
+</style>
+</head>
+
+<body onload="initBuyerPage()">
+
+<div class="app">
+
+<header>
+<h2>🛒 Buyer Marketplace</h2>
+<div onclick="logout()" style="cursor:pointer;">🚪</div>
+</header>
+
+<div class="container">
+
+<div id="welcomeUser"></div>
+
+<input type="text" id="searchInput" placeholder="Search crop..." onkeyup="renderCrops()">
+
+<select id="sortPrice" onchange="renderCrops()">
+<option value="">Sort by Price</option>
+<option value="low">Low to High</option>
+<option value="high">High to Low</option>
+</select>
+
+<select id="filterStatus" onchange="renderCrops()">
+<option value="">Filter by Status</option>
+<option value="fair">Fair</option>
+<option value="high">High</option>
+</select>
+
+<select id="filterLocation" onchange="renderCrops()">
+<option value="">Filter by Location</option>
+<option value="Chennai">Chennai</option>
+<option value="Madurai">Madurai</option>
+<option value="Salem">Salem</option>
+</select>
+
+<div id="cropList"></div>
+
+</div>
+
+<div class="bottom-nav">
+<span onclick="window.location.href='dashboard.html'">🏠</span>
+<span onclick="window.location.href='farmer.html'">🚜</span>
+<span onclick="window.location.href='buyer.html'">🛒</span>
+<span onclick="window.location.href='trends.html'">📊</span>
+<span onclick="window.location.href='transactions.html'">💳</span>
+</div>
+
+</div>
+
+<!-- Contact Modal -->
+<div class="modal" id="contactModal">
+<div class="modal-content">
+<h3>Contact Farmer</h3>
+<p id="contactText"></p>
+<button onclick="closeModal()">Close</button>
+</div>
+</div>
+
+<script>
+
+const crops = [
+{name:"Tomatoes", price:20, market:22, location:"Chennai", img:"images/tomato.jpeg"},
+{name:"Onions", price:40, market:35, location:"Madurai", img:"images/onion.jpeg"},
+{name:"Brinjal", price:30, market:32, location:"Salem", img:"images/brinjal.jpeg"},
+{name:"Carrot", price:45, market:48, location:"Chennai", img:"images/carrot.jpeg"},
+{name:"Beetroot", price:35, market:30, location:"Madurai", img:"images/beetroot.jpeg"},
+{name:"Corn", price:28, market:30, location:"Salem", img:"images/corn.jpeg"},
+{name:"Drumstick", price:120, market:115, location:"Chennai", img:"images/Drumstick.jpeg"},
+{name:"Wheat", price:50, market:48, location:"Salem", img:"images/wheat.jpeg"},
+{name:"Ginger", price:90, market:95, location:"Madurai", img:"images/ginger.jpeg"},
+{name:"Lady's Finger", price:35, market:33, location:"Chennai", img:"images/ladys finger.jpeg"}
+];
+
+function initBuyerPage() {
+    protectPage();
+    let user = getSession();
+    document.getElementById("welcomeUser").innerHTML =
+        `<div class="highlight">Welcome, <b>${user}</b></div>`;
+    renderCrops();
+}
+
+function renderCrops() {
+
+let search = document.getElementById("searchInput").value.toLowerCase();
+let sort = document.getElementById("sortPrice").value;
+let statusFilter = document.getElementById("filterStatus").value;
+let locationFilter = document.getElementById("filterLocation").value;
+
+let filtered = crops.filter(crop =>
+crop.name.toLowerCase().includes(search)
+);
+
+if(locationFilter)
+filtered = filtered.filter(crop => crop.location === locationFilter);
+
+if(statusFilter)
+filtered = filtered.filter(crop => {
+let status = crop.price <= crop.market ? "fair" : "high";
+return status === statusFilter;
+});
+
+if(sort === "low")
+filtered.sort((a,b)=>a.price-b.price);
+
+if(sort === "high")
+filtered.sort((a,b)=>b.price-a.price);
+
+const container = document.getElementById("cropList");
+container.innerHTML = "";
+
+filtered.forEach(crop=>{
+let status = crop.price <= crop.market ? "fair" : "high";
+
+container.innerHTML += `
+<div class="crop-card">
+    <div class="crop-top">
+        <img src="${crop.img}">
+        <h4>${crop.name}</h4>
+    </div>
+    <div class="price-info">
+        Location: ${crop.location}<br>
+        Farmer Price: ₹${crop.price}/kg<br>
+        Market Avg: ₹${crop.market}/kg<br>
+        <span class="${status}">
+            ${status === "fair" ? "Fair Price" : "Higher than Market"}
+        </span>
+    </div>
+    <button onclick="openModal('${crop.name}', '${crop.location}')">
+        Contact Farmer
+    </button>
+</div>
+`;
+});
+}
+
+function openModal(name, location){
+document.getElementById("contactText").innerText =
+`Farmer for ${name} is located in ${location}. Phone: 9876543210`;
+document.getElementById("contactModal").style.display="flex";
+}
+
+function closeModal(){
+document.getElementById("contactModal").style.display="none";
+}
+
+</script>
+
+</body>
+</html>

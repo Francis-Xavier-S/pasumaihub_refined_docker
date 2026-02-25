@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PasumaiHub Login</title>
+<script src="auth.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#4CAF50,#2E7D32);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card {
+    background: white;
+    width: 320px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #4CAF50;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    background: #4CAF50;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+a {
+    font-size: 13px;
+    color: #4CAF50;
+    text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>🌱 PasumaiHub</h2>
+
+<input type="text" id="username" placeholder="Username">
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<br><br>
+<a href="signup.html">Create Account</a>
+</div>
+
+<script>
+function login() {
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+
+    let savedPassword = localStorage.getItem(username);
+
+    if (savedPassword === password) {
+        setSession(username);
+        window.location.href = "dashboard.html";
+    } else {
+        alert("Invalid Username or Password");
+    }
+}
+</script>
+
+</body>
+</html>

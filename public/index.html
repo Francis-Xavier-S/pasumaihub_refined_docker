@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PasumaiHub - Fresh Farmers Market</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #16a34a;
+      --primary-dark: #15803d;
+      --secondary: #f97316;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --border: #e2e8f0;
+      --error: #ef4444;
+      --success: #22c55e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+    body { background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    .auth-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #16a34a 0%, #065f46 100%);
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: var(--surface);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .auth-header { text-align: center; margin-bottom: 32px; }
+    .auth-header h1 { font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+    .auth-header p { color: var(--text-light); }
+
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-primary { background: var(--primary); color: white; width: 100%; }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--bg); }
+    .btn-danger { background: var(--error); color: white; }
+
+    .auth-footer { text-align: center; margin-top: 24px; color: var(--text-light); font-size: 14px; }
+    .auth-footer a { color: var(--primary); text-decoration: none; font-weight: 500; }
+    .auth-footer a:hover { text-decoration: underline; }
+
+    .tabs { display: flex; gap: 8px; margin-bottom: 24px; background: var(--bg); padding: 4px; border-radius: 10px; }
+    .tab { flex: 1; padding: 10px; border: none; background: transparent; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; color: var(--text-light); transition: all 0.2s; }
+    .tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+    .app { display: none; }
+    .app.active { display: block; }
+
+    .navbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar-brand { font-size: 20px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .navbar-menu { display: flex; align-items: center; gap: 16px; }
+    .nav-link { color: var(--text-light); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: 8px; transition: all 0.2s; }
+    .nav-link:hover, .nav-link.active { color: var(--primary); background: rgba(22, 163, 74, 0.1); }
+    .user-badge { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg); border-radius: 8px; font-size: 14px; }
+    .user-badge .role { font-size: 12px; padding: 2px 8px; background: var(--primary); color: white; border-radius: 4px; text-transform: capitalize; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .page-header { margin-bottom: 24px; }
+    .page-header h2 { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+    .page-header p { color: var(--text-light); }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .stat-card { background: var(--surface); padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
+    .stat-card h3 { font-size: 14px; color: var(--text-light); font-weight: 500; margin-bottom: 8px; }
+    .stat-card .value { font-size: 28px; font-weight: 700; color: var(--text); }
+    .stat-card .value.primary { color: var(--primary); }
+    .stat-card .value.secondary { color: var(--secondary); }
+
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .product-card { background: var(--surface); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+    .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(0,0,0,0.15); }
+    .product-image { width: 100%; height: 180px; background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+    .product-content { padding: 16px; }
+    .product-category { font-size: 12px; color: var(--primary); font-weight: 500; text-transform: uppercase; margin-bottom: 4px; }
+    .product-name { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .product-price { font-size: 24px; font-weight: 700; color: var(--text); }
+    .product-price span { font-size: 14px; font-weight: 400; color: var(--text-light); }
+    .product-seller { font-size: 13px; color: var(--text-light); margin: 8px 0; }
+    .product-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .product-actions .btn { flex: 1; }
+
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 200; padding: 20px; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--surface); padding: 32px; border-radius: 16px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .modal-header h3 { font-size: 20px; font-weight: 600; }
+    .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light); }
+
+    .transactions-list { display: flex; flex-direction: column; gap: 12px; }
+    .transaction-item { background: var(--surface); padding: 16px; border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; gap: 16px; }
+    .transaction-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .transaction-icon.sale { background: #dcfce7; }
+    .transaction-icon.purchase { background: #fef3c7; }
+    .transaction-details { flex: 1; }
+    .transaction-product { font-weight: 600; margin-bottom: 4px; }
+    .transaction-meta { font-size: 13px; color: var(--text-light); }
+    .transaction-amount { font-size: 18px; font-weight: 700; }
+    .transaction-amount.positive { color: var(--success); }
+    .transaction-amount.negative { color: var(--text); }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-light); }
+    .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+
+    .toast { position: fixed; bottom: 24px; right: 24px; padding: 16px 24px; background: var(--text); color: white; border-radius: 10px; font-size: 14px; z-index: 300; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { background: var(--error); }
+    .toast.success { background: var(--success); }
+
+    @media (max-width: 768px) {
+      .navbar { flex-direction: column; gap: 12px; }
+      .navbar-menu { flex-wrap: wrap; justify-content: center; }
+      .products-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="auth-container" id="authPage">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1>🌱 PasumaiHub</h1>
+          <p>Fresh farmers marketplace</p>
+        </div>
+        <div class="tabs">
+          <button class="tab active" data-tab="login">Login</button>
+          <button class="tab" data-tab="register">Register</button>
+        </div>
+        
+        <form id="loginForm">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="loginUsername" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+
+        <form id="registerForm" style="display: none;">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="regUsername" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="regEmail">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="regPassword" required>
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <select id="regRole">
+              <option value="farmer">Farmer</option>
+              <option value="buyer">Buyer</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Create Account</button>
+        </form>
+
+        <div class="auth-footer">
+          <a href="#" id="toggleAuth">Don't have an account? Register</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="app" id="mainApp">
+      <nav class="navbar">
+        <div class="navbar-brand">🌱 PasumaiHub</div>
+        <div class="navbar-menu">
+          <a href="#" class="nav-link active" data-page="market">Market</a>
+          <a href="#" class="nav-link" data-page="dashboard">Dashboard</a>
+          <a href="#" class="nav-link" data-page="products">My Products</a>
+          <a href="#" class="nav-link" data-page="transactions">Transactions</a>
+          <div class="user-badge">
+            <span id="navUsername"></span>
+            <span class="role" id="navRole"></span>
+          </div>
+          <button class="btn btn-secondary" id="logoutBtn">Logout</button>
+        </div>
+      </nav>
+
+      <div class="container">
+        <div class="page" id="marketPage">
+          <div class="page-header">
+            <h2>🛒 Browse Market</h2>
+            <p>Fresh produce from local farmers</p>
+          </div>
+          <div class="form-group" style="max-width: 400px; margin-bottom: 24px;">
+            <input type="text" id="searchInput" placeholder="Search products...">
+          </div>
+          <div class="products-grid" id="marketProducts"></div>
+        </div>
+
+        <div class="page" id="dashboardPage">
+          <div class="page-header">
+            <h2>📊 Dashboard</h2>
+            <p>Your overview at a glance</p>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h3>Total Products</h3>
+              <div class="value primary" id="statProducts">0</div>
+            </div>
+            <div class="stat-card">
+              <h3>Total Sales</h3>
+              <div class="value" id="statSales">0</div>
+            </div>
+            <div class="stat-card">
+              <h3>Revenue</h3>
+              <div class="value secondary" id="statRevenue">₹0</div>
+            </div>
+            <div class="stat-card">
+              <h3>Purchases</h3>
+              <div class="value" id="statPurchases">0</div>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="addProductBtn">+ Add New Product</button>
+        </div>
+
+        <div class="page" id="productsPage">
+          <div class="page-header">
+            <h2>📦 My Products</h2>
+            <p>Manage your listings</p>
+          </div>
+          <div class="products-grid" id="myProducts"></div>
+        </div>
+
+        <div class="page" id="transactionsPage">
+          <div class="page-header">
+            <h2>💰 Transactions</h2>
+            <p>Your sales and purchases</p>
+          </div>
+          <div class="transactions-list" id="transactionsList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="productModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Add Product</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="productForm">
+        <input type="hidden" id="productId">
+        <div class="form-group">
+          <label>Product Name</label>
+          <input type="text" id="productName" required>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="productDescription" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Price (₹)</label>
+          <input type="number" id="productPrice" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label>Unit</label>
+          <select id="productUnit">
+            <option value="kg">kg</option>
+            <option value="piece">piece</option>
+            <option value="dozen">dozen</option>
+            <option value="ton">ton</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="productCategory">
+            <option value="vegetables">Vegetables</option>
+            <option value="fruits">Fruits</option>
+            <option value="grains">Grains</option>
+            <option value="spices">Spices</option>
+            <option value="dairy">Dairy</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Product</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="buyModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Buy Product</h3>
+        <button class="modal-close" onclick="closeBuyModal()">&times;</button>
+      </div>
+      <form id="buyForm">
+        <input type="hidden" id="buyProductId">
+        <div class="form-group">
+          <label>Product</label>
+          <input type="text" id="buyProductName" readonly>
+        </div>
+        <div class="form-group">
+          <label>Price per unit</label>
+          <input type="text" id="buyProductPrice" readonly>
+        </div>
+        <div class="form-group">
+          <label>Quantity</label>
+          <input type="number" id="buyQuantity" min="1" value="1" required>
+        </div>
+        <div class="form-group">
+          <label>Total</label>
+          <input type="text" id="buyTotal" readonly>
+        </div>
+        <button type="submit" class="btn btn-primary">Confirm Purchase</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API = '';
+    let currentUser = null;
+    let products = [];
+    let myProducts = [];
+
+    function showToast(message, type = '') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = 'toast ' + type;
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    async function apiCall(endpoint, options = {}) {
+      const token = localStorage.getItem('token');
+      const headers = { 'Content-Type': 'application/json', ...options.headers };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
+      const res = await fetch(API + endpoint, { ...options, headers });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Request failed');
+      return data;
+    }
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('loginForm').style.display = tab.dataset.tab === 'login' ? 'block' : 'none';
+        document.getElementById('registerForm').style.display = tab.dataset.tab === 'register' ? 'block' : 'none';
+        document.getElementById('toggleAuth').textContent = tab.dataset.tab === 'login' ? "Don't have an account? Register" : "Already have an account? Login";
+      });
+    });
+
+    document.getElementById('toggleAuth').addEventListener('click', e => {
+      e.preventDefault();
+      const tabs = document.querySelectorAll('.tab');
+      tabs[0].classList.toggle('active');
+      tabs[1].classList.toggle('active');
+      document.getElementById('loginForm').style.display = tabs[0].classList.contains('active') ? 'block' : 'none';
+      document.getElementById('registerForm').style.display = tabs[1].classList.contains('active') ? 'block' : 'none';
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      try {
+        const data = await apiCall('/api/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({
+            username: document.getElementById('loginUsername').value,
+            password: document.getElementById('loginPassword').value
+          })
+        });
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        showApp(data.user);
+        showToast('Welcome back!', 'success');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      try {
+        const data = await apiCall('/api/auth/register', {
+          method: 'POST',
+          body: JSON.stringify({
+            username: document.getElementById('regUsername').value,
+            email: document.getElementById('regEmail').value,
+            password: document.getElementById('regPassword').value,
+            role: document.getElementById('regRole').value
+          })
+        });
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        showApp(data.user);
+        showToast('Account created!', 'success');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      document.getElementById('authPage').style.display = 'flex';
+      document.getElementById('mainApp').classList.remove('active');
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(link.dataset.page + 'Page').classList.add('active');
+        if (link.dataset.page === 'market') loadMarket();
+        if (link.dataset.page === 'dashboard') loadDashboard();
+        if (link.dataset.page === 'products') loadMyProducts();
+        if (link.dataset.page === 'transactions') loadTransactions();
+      });
+    });
+
+    function showApp(user) {
+      currentUser = user;
+      document.getElementById('authPage').style.display = 'none';
+      document.getElementById('mainApp').classList.add('active');
+      document.getElementById('navUsername').textContent = user.username;
+      document.getElementById('navRole').textContent = user.role;
+      loadMarket();
+      document.querySelector('.nav-link[data-page="market"]').click();
+    }
+
+    async function loadMarket() {
+      try {
+        products = await apiCall('/api/products');
+        renderMarketProducts();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function renderMarketProducts() {
+      const container = document.getElementById('marketProducts');
+      if (products.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="icon">🥬</div><p>No products available</p></div>';
+        return;
+      }
+      const icons = { vegetables: '🥬', fruits: '🍎', grains: '🌾', spices: '🌶️', dairy: '🥛', other: '📦' };
+      container.innerHTML = products.map(p => `
+        <div class="product-card">
+          <div class="product-image">${icons[p.category] || '📦'}</div>
+          <div class="product-content">
+            <div class="product-category">${p.category}</div>
+            <div class="product-name">${p.name}</div>
+            <div class="product-price">₹${p.price} <span>/ ${p.unit}</span></div>
+            <div class="product-seller">By ${p.seller_name}</div>
+            <div class="product-actions">
+              <button class="btn btn-primary" onclick="openBuyModal('${p.id}')">Buy Now</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('searchInput').addEventListener('input', async e => {
+      const search = e.target.value;
+      products = await apiCall('/api/products?search=' + search);
+      renderMarketProducts();
+    });
+
+    async function loadDashboard() {
+      try {
+        const stats = await apiCall('/api/stats');
+        document.getElementById('statProducts').textContent = stats.totalProducts;
+        document.getElementById('statSales').textContent = stats.totalSales;
+        document.getElementById('statRevenue').textContent = '₹' + stats.totalRevenue.toFixed(0);
+        document.getElementById('statPurchases').textContent = stats.totalPurchases;
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function loadMyProducts() {
+      try {
+        myProducts = await apiCall('/api/products/my');
+        renderMyProducts();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function renderMyProducts() {
+      const container = document.getElementById('myProducts');
+      const icons = { vegetables: '🥬', fruits: '🍎', grains: '🌾', spices: '🌶️', dairy: '🥛', other: '📦' };
+      if (myProducts.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>No products listed yet</p></div>';
+        return;
+      }
+      container.innerHTML = myProducts.map(p => `
+        <div class="product-card">
+          <div class="product-image">${icons[p.category] || '📦'}</div>
+          <div class="product-content">
+            <div class="product-category">${p.category}</div>
+            <div class="product-name">${p.name}</div>
+            <div class="product-price">₹${p.price} <span>/ ${p.unit}</span></div>
+            <div class="product-seller">${p.available ? '✅ Available' : '❌ Unavailable'}</div>
+            <div class="product-actions">
+              <button class="btn btn-secondary" onclick="editProduct('${p.id}')">Edit</button>
+              <button class="btn btn-danger" onclick="deleteProduct('${p.id}')">Delete</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('addProductBtn').addEventListener('click', () => {
+      document.getElementById('modalTitle').textContent = 'Add Product';
+      document.getElementById('productId').value = '';
+      document.getElementById('productForm').reset();
+      document.getElementById('productModal').classList.add('active');
+    });
+
+    function editProduct(id) {
+      const p = myProducts.find(x => x.id === id);
+      if (!p) return;
+      document.getElementById('modalTitle').textContent = 'Edit Product';
+      document.getElementById('productId').value = p.id;
+      document.getElementById('productName').value = p.name;
+      document.getElementById('productDescription').value = p.description || '';
+      document.getElementById('productPrice').value = p.price;
+      document.getElementById('productUnit').value = p.unit;
+      document.getElementById('productCategory').value = p.category;
+      document.getElementById('productModal').classList.add('active');
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('Delete this product?')) return;
+      try {
+        await apiCall('/api/products/' + id, { method: 'DELETE' });
+        showToast('Product deleted', 'success');
+        loadMyProducts();
+        loadDashboard();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('productModal').classList.remove('active');
+    }
+
+    document.getElementById('productForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const id = document.getElementById('productId').value;
+      const data = {
+        name: document.getElementById('productName').value,
+        description: document.getElementById('productDescription').value,
+        price: parseFloat(document.getElementById('productPrice').value),
+        unit: document.getElementById('productUnit').value,
+        category: document.getElementById('productCategory').value
+      };
+      try {
+        if (id) {
+          await apiCall('/api/products/' + id, { method: 'PUT', body: JSON.stringify(data) });
+          showToast('Product updated', 'success');
+        } else {
+          await apiCall('/api/products', { method: 'POST', body: JSON.stringify(data) });
+          showToast('Product created', 'success');
+        }
+        closeModal();
+        loadMyProducts();
+        loadDashboard();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    });
+
+    function openBuyModal(productId) {
+      const p = products.find(x => x.id === productId);
+      if (!p || p.user_id === currentUser.id) {
+        showToast("You can't buy your own product", 'error');
+        return;
+      }
+      document.getElementById('buyProductId').value = productId;
+      document.getElementById('buyProductName').value = p.name;
+      document.getElementById('buyProductPrice').value = '₹' + p.price + ' / ' + p.unit;
+      document.getElementById('buyQuantity').value = 1;
+      updateBuyTotal();
+      document.getElementById('buyModal').classList.add('active');
+    }
+
+    document.getElementById('buyQuantity').addEventListener('input', updateBuyTotal);
+
+    function updateBuyTotal() {
+      const qty = parseFloat(document.getElementById('buyQuantity').value) || 0;
+      const p = products.find(x => x.id === document.getElementById('buyProductId').value);
+      document.getElementById('buyTotal').value = '₹' + (p ? (p.price * qty).toFixed(2) : '0');
+    }
+
+    function closeBuyModal() {
+      document.getElementById('buyModal').classList.remove('active');
+    }
+
+    document.getElementById('buyForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      try {
+        await apiCall('/api/transactions', {
+          method: 'POST',
+          body: JSON.stringify({
+            product_id: document.getElementById('buyProductId').value,
+            quantity: parseFloat(document.getElementById('buyQuantity').value)
+          })
+        });
+        showToast('Purchase successful!', 'success');
+        closeBuyModal();
+        loadTransactions();
+        loadDashboard();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    });
+
+    async function loadTransactions() {
+      try {
+        const transactions = await apiCall('/api/transactions');
+        renderTransactions(transactions);
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function renderTransactions(transactions) {
+      const container = document.getElementById('transactionsList');
+      if (transactions.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="icon">💰</div><p>No transactions yet</p></div>';
+        return;
+      }
+      container.innerHTML = transactions.map(t => {
+        const isSale = t.seller_id === currentUser.id;
+        return `
+          <div class="transaction-item">
+            <div class="transaction-icon ${isSale ? 'sale' : 'purchase'}">${isSale ? '💵' : '🛒'}</div>
+            <div class="transaction-details">
+              <div class="transaction-product">${t.product_name}</div>
+              <div class="transaction-meta">${isSale ? 'Sold to ' + t.buyer_name : 'Bought from ' + t.seller_name} • ${t.quantity} ${t.status}</div>
+            </div>
+            <div class="transaction-amount ${isSale ? 'positive' : 'negative'}">${isSale ? '+' : '-'}₹${t.total_price.toFixed(0)}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    (async function init() {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      if (token && user) {
+        try {
+          await apiCall('/api/auth/me');
+          showApp(user);
+        } catch (err) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
